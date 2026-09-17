@@ -1,0 +1,1348 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Primer Examen Parcial - Algoritmos y Programación 1 | USC</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        usc: {
+                            red: '#990000',
+                            reddark: '#660000',
+                            gold: '#D4AF37',
+                            navy: '#0A192F',
+                            light: '#F8FAFC'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['Fira Code', 'monospace']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+        @keyframes pulse-ring {
+            0% { transform: scale(0.95); opacity: 0.8; }
+            50% { transform: scale(1.05); opacity: 1; }
+            100% { transform: scale(0.95); opacity: 0.8; }
+        }
+        .timer-warning {
+            animation: pulse-ring 1s infinite;
+        }
+    </style>
+</head>
+<body class="bg-slate-100 text-slate-800 font-sans min-h-screen flex flex-col justify-between selection:bg-usc-red selection:text-white">
+
+    <!-- Header -->
+    <header class="bg-usc-navy text-white border-b-4 border-usc-red shadow-lg sticky top-0 z-40">
+        <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="bg-usc-red text-white p-2.5 rounded-lg shadow-md font-black text-xl flex items-center justify-center w-10 h-10 border border-red-400">
+                    USC
+                </div>
+                <div>
+                    <h1 class="text-base sm:text-lg font-bold leading-tight tracking-wide">Universidad Santiago de Cali</h1>
+                    <p class="text-xs text-slate-300 font-medium">Algoritmos y Programación 1 &bull; Primer Examen Parcial</p>
+                </div>
+            </div>
+            <div class="hidden md:flex items-center space-x-4 text-xs font-semibold text-slate-300">
+                <span class="flex items-center gap-1.5 bg-slate-800/80 px-3 py-1.5 rounded-full border border-slate-700">
+                    <i class="fa-solid fa-user-tie text-usc-gold"></i> Docente: Camilo Charry
+                </span>
+                <button onclick="openInstructorModal()" class="text-slate-400 hover:text-white transition-colors title='Acceso Docente'">
+                    <i class="fa-solid fa-lock text-sm"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="flex-grow max-w-4xl w-full mx-auto p-4 sm:p-6 my-4">
+
+        <!-- SCREEN 0: EXAM ALREADY TAKEN LOCK -->
+        <div id="screen-locked" class="hidden bg-white rounded-2xl shadow-xl p-6 sm:p-10 text-center border border-red-200">
+            <div class="w-20 h-20 bg-red-100 text-usc-red rounded-full flex items-center justify-center mx-auto mb-6 text-3xl shadow-inner">
+                <i class="fa-solid fa-user-shield"></i>
+            </div>
+            <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 mb-3">Examen ya Presentado</h2>
+            <p class="text-slate-600 max-w-lg mx-auto mb-6 text-sm sm:text-base leading-relaxed">
+                El sistema detectó que este dispositivo o estudiante ya ha realizado el <strong class="text-slate-800">Primer Examen Parcial</strong>.
+                De acuerdo con el reglamento académico, no está permitido repetir la prueba.
+            </p>
+            <div id="locked-summary-box" class="bg-slate-50 p-4 rounded-xl border border-slate-200 max-w-md mx-auto mb-6 text-left text-sm space-y-2">
+                <!-- Filled dynamically if record exists -->
+            </div>
+            <div class="flex flex-wrap justify-center gap-3">
+                <button onclick="openInstructorModal()" class="px-5 py-2.5 bg-slate-800 hover:bg-slate-900 text-white rounded-xl font-semibold text-sm transition-all shadow-md flex items-center gap-2">
+                    <i class="fa-solid fa-key"></i> Reiniciar (Solo Docente)
+                </button>
+            </div>
+        </div>
+
+        <!-- SCREEN 1: REGISTRATION & INSTRUCTIONS -->
+        <div id="screen-welcome" class="bg-white rounded-2xl shadow-xl overflow-hidden border border-slate-200 transition-all duration-300">
+            <div class="bg-gradient-to-r from-usc-navy via-slate-900 to-usc-red p-6 sm:p-8 text-white relative">
+                <div class="absolute right-4 top-4 opacity-10 text-8xl text-white pointer-events-none">
+                    <i class="fa-solid fa-laptop-code"></i>
+                </div>
+                <span class="inline-block px-3 py-1 bg-usc-gold/20 text-usc-gold font-bold text-xs uppercase tracking-wider rounded-full border border-usc-gold/30 mb-3">
+                    Facultad de Ingeniería
+                </span>
+                <h2 class="text-2xl sm:text-3xl font-extrabold tracking-tight">Evaluación Parcial Interactiva</h2>
+                <p class="text-slate-300 text-sm mt-2 max-w-xl">
+                    Primer Parcial de Evaluación Teórica e Interpretación de Algoritmos en Seudocódigo y PSeInt.
+                </p>
+            </div>
+
+            <div class="p-6 sm:p-8 space-y-6">
+                <!-- Instructions grid -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs sm:text-sm">
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 flex items-start gap-3">
+                        <i class="fa-solid fa-clock text-usc-red text-xl mt-0.5"></i>
+                        <div>
+                            <h4 class="font-bold text-slate-900">Tiempo por Pregunta</h4>
+                            <p class="text-slate-600 mt-0.5">Máximo <strong>1 minuto (60s)</strong> por pregunta. Al agotarse, avanza automáticamente.</p>
+                        </div>
+                    </div>
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 flex items-start gap-3">
+                        <i class="fa-solid fa-shuffle text-blue-600 text-xl mt-0.5"></i>
+                        <div>
+                            <h4 class="font-bold text-slate-900">Aleatoriedad</h4>
+                            <p class="text-slate-600 mt-0.5">Las preguntas y sus opciones de respuesta cambian aleatoriamente para cada intento.</p>
+                        </div>
+                    </div>
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 flex items-start gap-3">
+                        <i class="fa-solid fa-graduation-cap text-emerald-600 text-xl mt-0.5"></i>
+                        <div>
+                            <h4 class="font-bold text-slate-900">Calificación</h4>
+                            <p class="text-slate-600 mt-0.5">Escala sobre <strong>5.0</strong>. La nota mínima de aprobación es <strong>3.0</strong>.</p>
+                        </div>
+                    </div>
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 flex items-start gap-3">
+                        <i class="fa-solid fa-envelope-circle-check text-purple-600 text-xl mt-0.5"></i>
+                        <div>
+                            <h4 class="font-bold text-slate-900">Retroalimentación</h4>
+                            <p class="text-slate-600 mt-0.5">Se desbloquea únicamente al finalizar e informar al docente por correo.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <hr class="border-slate-200">
+
+                <!-- Registration Form -->
+                <form id="form-start-exam" onsubmit="handleStartExam(event)" class="space-y-4">
+                    <div>
+                        <label for="student-name" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
+                            Nombre Completo del Estudiante <span class="text-usc-red">*</span>
+                        </label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-400">
+                                <i class="fa-solid fa-user"></i>
+                            </span>
+                            <input type="text" id="student-name" required placeholder="Ej. Juan Carlos Pérez Gómez"
+                                class="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-300 rounded-xl focus:ring-2 focus:ring-usc-red focus:bg-white focus:outline-none transition-all font-medium text-slate-800 text-sm">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label for="student-group" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
+                            Grupo / Asignatura <span class="text-usc-red">*</span>
+                        </label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-400 pointer-events-none z-10">
+                                <i class="fa-solid fa-layer-group"></i>
+                            </span>
+                            <select id="student-group" required
+                                class="w-full pl-10 pr-10 py-3 bg-slate-50 border border-slate-300 rounded-xl focus:ring-2 focus:ring-usc-red focus:bg-white focus:outline-none transition-all font-medium text-slate-800 text-sm appearance-none cursor-pointer">
+                                <option value="" disabled selected>Seleccione su grupo</option>
+                                <option value="APO 08">APO 08</option>
+                                <option value="APO 09">APO 09</option>
+                            </select>
+                            <span class="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-400 pointer-events-none">
+                                <i class="fa-solid fa-chevron-down text-xs"></i>
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="pt-2">
+                        <button type="submit" class="w-full py-4 bg-usc-red hover:bg-usc-reddark text-white font-bold rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 text-base flex items-center justify-center gap-3 group">
+                            <span>Iniciar Examen Parcial</span>
+                            <i class="fa-solid fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- SCREEN 2: ACTIVE EXAM QUIZ -->
+        <div id="screen-quiz" class="hidden space-y-4">
+            <!-- Top Progress & Student Info Bar -->
+            <div class="bg-white p-4 rounded-2xl shadow-md border border-slate-200 flex flex-wrap items-center justify-between gap-3">
+                <div class="flex items-center gap-3">
+                    <div class="w-9 h-9 rounded-full bg-usc-red/10 text-usc-red font-bold flex items-center justify-center text-sm border border-usc-red/20">
+                        <i class="fa-solid fa-user-graduate"></i>
+                    </div>
+                    <div>
+                        <h3 id="quiz-student-display" class="text-sm font-bold text-slate-900 leading-tight">Estudiante</h3>
+                        <p id="quiz-group-display" class="text-xs text-slate-500">Grupo: ---</p>
+                    </div>
+                </div>
+
+                <!-- Circular Timer -->
+                <div class="flex items-center gap-3 bg-slate-50 px-4 py-2 rounded-xl border border-slate-200">
+                    <div class="relative w-11 h-11 flex items-center justify-center">
+                        <svg class="w-11 h-11 transform -rotate-90">
+                            <circle cx="22" cy="22" r="18" stroke-width="3.5" stroke="#e2e8f0" fill="none"/>
+                            <circle id="timer-circle" cx="22" cy="22" r="18" stroke-width="3.5" stroke="#990000" fill="none"
+                                stroke-dasharray="113" stroke-dashoffset="0" class="transition-all duration-1000 ease-linear"/>
+                        </svg>
+                        <span id="timer-text" class="absolute text-xs font-black text-slate-800">60s</span>
+                    </div>
+                    <div class="text-right">
+                        <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">Tiempo</span>
+                        <span id="timer-status" class="text-xs font-bold text-emerald-600">Restante</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Global Question Progress Bar -->
+            <div class="bg-white p-3 rounded-xl shadow-sm border border-slate-200 flex items-center gap-4">
+                <span class="text-xs font-bold text-slate-600 whitespace-nowrap" id="question-count-text">
+                    Pregunta 1 de 20
+                </span>
+                <div class="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden border border-slate-200">
+                    <div id="progress-bar-fill" class="bg-usc-red h-full transition-all duration-300 w-0"></div>
+                </div>
+            </div>
+
+            <!-- Question Card -->
+            <div class="bg-white rounded-2xl shadow-lg border border-slate-200 p-6 sm:p-8 transition-all">
+                <div class="mb-6">
+                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-100 text-slate-700 text-xs font-semibold mb-3 border border-slate-200">
+                        <i class="fa-solid fa-code text-usc-red"></i> Algoritmos y Seudocódigo
+                    </div>
+                    <h3 id="question-title" class="text-base sm:text-lg font-bold text-slate-900 leading-relaxed whitespace-pre-line">
+                        Cargando pregunta...
+                    </h3>
+                </div>
+
+                <!-- Code block container (if present in question) -->
+                <div id="code-snippet-container" class="hidden mb-6 bg-slate-900 text-slate-100 p-4 rounded-xl font-mono text-xs sm:text-sm overflow-x-auto shadow-inner border border-slate-800">
+                    <pre id="code-snippet-text" class="whitespace-pre"></pre>
+                </div>
+
+                <!-- Answer Options -->
+                <div id="options-container" class="space-y-3">
+                    <!-- Dynamic Options -->
+                </div>
+
+                <!-- Next Button -->
+                <div class="mt-8 flex justify-end">
+                    <button id="btn-next-question" onclick="handleNextQuestion()"
+                        class="px-6 py-3 bg-usc-navy hover:bg-slate-900 text-white font-bold rounded-xl shadow-md transition-all flex items-center gap-2 text-sm">
+                        <span>Siguiente Pregunta</span>
+                        <i class="fa-solid fa-chevron-right text-xs"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- SCREEN 3: EXAM COMPLETE & SCORE CARD -->
+        <div id="screen-results" class="hidden space-y-6">
+            <!-- Grade Header Card -->
+            <div class="bg-white rounded-2xl shadow-xl overflow-hidden border border-slate-200">
+                <div id="result-header-bg" class="p-6 sm:p-8 text-white text-center relative bg-gradient-to-r from-usc-navy to-slate-900">
+                    <span class="px-3 py-1 bg-white/10 rounded-full text-xs font-semibold tracking-wider uppercase mb-3 inline-block">
+                        Resultado Oficial Registrado
+                    </span>
+                    <h2 class="text-2xl sm:text-3xl font-black">Primer Examen Parcial Finalizado</h2>
+                    <p class="text-xs sm:text-sm text-slate-300 mt-1">
+                        Universidad Santiago de Cali &bull; Algoritmos y Programación 1
+                    </p>
+                </div>
+
+                <div class="p-6 sm:p-8 text-center">
+                    <!-- Big Score Display -->
+                    <div class="inline-flex flex-col items-center justify-center p-6 bg-slate-50 border-2 border-slate-200 rounded-3xl mb-6 min-w-[220px]">
+                        <span class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-1">Nota Final</span>
+                        <div class="text-5xl sm:text-6xl font-black text-slate-900 tracking-tight" id="final-score-display">
+                            0.0
+                        </div>
+                        <span class="text-xs font-bold text-slate-400 mt-1">Escala 0.0 - 5.0</span>
+                        <div id="score-status-badge" class="mt-3 px-4 py-1.5 rounded-full text-xs font-extrabold uppercase tracking-wider">
+                            Aprobado
+                        </div>
+                    </div>
+
+                    <!-- Statistics Grid -->
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-left max-w-xl mx-auto mb-6 text-xs sm:text-sm">
+                        <div class="bg-slate-50 p-3 rounded-xl border border-slate-200">
+                            <span class="text-slate-400 block text-[10px] uppercase font-bold">Aciertos</span>
+                            <span id="stat-correct" class="text-base font-extrabold text-emerald-600">0 / 0</span>
+                        </div>
+                        <div class="bg-slate-50 p-3 rounded-xl border border-slate-200">
+                            <span class="text-slate-400 block text-[10px] uppercase font-bold">Porcentaje</span>
+                            <span id="stat-percentage" class="text-base font-extrabold text-blue-600">0%</span>
+                        </div>
+                        <div class="bg-slate-50 p-3 rounded-xl border border-slate-200">
+                            <span class="text-slate-400 block text-[10px] uppercase font-bold">Estudiante</span>
+                            <span id="stat-name" class="text-xs font-bold text-slate-800 truncate block">---</span>
+                        </div>
+                        <div class="bg-slate-50 p-3 rounded-xl border border-slate-200">
+                            <span class="text-slate-400 block text-[10px] uppercase font-bold">Fecha / Hora</span>
+                            <span id="stat-date" class="text-[11px] font-bold text-slate-700 block">---</span>
+                        </div>
+                    </div>
+
+                    <!-- Mandatory Email Notice Box -->
+                    <div class="bg-amber-50 border border-amber-200 rounded-2xl p-5 text-left mb-6 space-y-3">
+                        <div class="flex items-start gap-3">
+                            <i class="fa-solid fa-triangle-exclamation text-amber-600 text-xl mt-0.5"></i>
+                            <div>
+                                <h4 class="font-bold text-amber-900 text-sm">Instrucciones para Desbloquear la Retroalimentación</h4>
+                                <p class="text-slate-700 text-xs sm:text-sm mt-1 leading-relaxed">
+                                    Para verificar tu calificacion y habilitar la revision detallada de tus respuestas, debes notificar por correo al docente 
+                                    <strong class="text-slate-900">Camilo Charry</strong> a la dirección 
+                                    <code class="bg-amber-100 text-amber-900 px-1.5 py-0.5 rounded font-mono font-bold text-xs">camilo.charry00@usc.edu.co</code> 
+                                    adjuntando una captura de pantalla de este comprobante.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="pt-2 flex flex-wrap gap-3">
+                            <a id="btn-send-email" href="#" target="_blank"
+                                class="px-5 py-2.5 bg-usc-red hover:bg-usc-reddark text-white font-bold rounded-xl text-xs sm:text-sm transition-all shadow flex items-center gap-2">
+                                <i class="fa-solid fa-paper-plane"></i>
+                                <span>Enviar Correo al Docente</span>
+                            </a>
+                            <button onclick="downloadCertificateCard()" 
+                                class="px-5 py-2.5 bg-slate-800 hover:bg-slate-900 text-white font-bold rounded-xl text-xs sm:text-sm transition-all shadow flex items-center gap-2">
+                                <i class="fa-solid fa-print"></i>
+                                <span>Generar Comprobante PDF / Imprimir</span>
+                            </button>
+                            <button onclick="unlockFeedback()" id="btn-unlock-feedback"
+                                class="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl text-xs sm:text-sm transition-all shadow flex items-center gap-2">
+                                <i class="fa-solid fa-key"></i>
+                                <span>Confirmé el Envío y Desbloquear Retroalimentación</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Locked Feedback Container -->
+            <div id="feedback-locked-container" class="bg-white rounded-2xl shadow-lg p-8 text-center border border-slate-200">
+                <div class="w-16 h-16 bg-slate-100 text-slate-400 rounded-full flex items-center justify-center mx-auto mb-3 text-2xl">
+                    <i class="fa-solid fa-lock"></i>
+                </div>
+                <h3 class="text-lg font-bold text-slate-800">Retroalimentación Bloqueada</h3>
+                <p class="text-xs sm:text-sm text-slate-500 max-w-md mx-auto mt-1">
+                    Haz clic en el botón superior <strong class="text-slate-700">"Confirmé el Envío y Desbloquear Retroalimentación"</strong> tras notificar al profesor para examinar cada una de las preguntas del examen.
+                </p>
+            </div>
+
+            <!-- Unlocked Feedback Container -->
+            <div id="feedback-unlocked-container" class="hidden bg-white rounded-2xl shadow-lg border border-slate-200 p-6 sm:p-8 space-y-6">
+                <div class="border-b border-slate-200 pb-4 flex items-center justify-between">
+                    <div>
+                        <h3 class="text-lg font-extrabold text-slate-900 flex items-center gap-2">
+                            <i class="fa-solid fa-square-check text-emerald-600"></i>
+                            Revision Detallada de Respuestas
+                        </h3>
+                        <p class="text-xs text-slate-500">Compara tus respuestas seleccionadas con la respuesta correcta.</p>
+                    </div>
+                    <span class="text-xs bg-emerald-100 text-emerald-800 font-bold px-3 py-1 rounded-full">
+                        Desbloqueado
+                    </span>
+                </div>
+
+                <div id="feedback-questions-list" class="space-y-6">
+                    <!-- Dynamic Feedback List -->
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Modal: Instructor Admin Access -->
+    <div id="modal-instructor" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 border border-slate-200">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+                    <i class="fa-solid fa-user-shield text-usc-red"></i> Acceso Docente / Administrador
+                </h3>
+                <button onclick="closeInstructorModal()" class="text-slate-400 hover:text-slate-600">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+
+            <p class="text-xs text-slate-600 mb-4">
+                Igrese la contraseña de docente para reiniciar el registro local y permitir un nuevo intento de prueba en este navegador.
+            </p>
+
+            <form onsubmit="handleInstructorLogin(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Contraseña Docente</label>
+                    <input type="password" id="instructor-password" required placeholder="Clave de autorización"
+                        class="w-full px-3 py-2.5 bg-slate-50 border border-slate-300 rounded-xl focus:ring-2 focus:ring-usc-red outline-none text-sm font-mono">
+                </div>
+                <div class="flex justify-end gap-2">
+                    <button type="button" onclick="closeInstructorModal()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl font-bold text-xs">
+                        Cancelar
+                    </button>
+                    <button type="submit" class="px-4 py-2 bg-usc-red hover:bg-usc-reddark text-white rounded-xl font-bold text-xs shadow">
+                        Reiniciar Intento
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 text-slate-400 text-xs py-6 border-t border-slate-800">
+        <div class="max-w-6xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left">
+            <div>
+                <p class="font-bold text-slate-300">Universidad Santiago de Cali &bull; Seccional Cali</p>
+                <p class="text-slate-500 mt-0.5">Asignatura: Algoritmos y Programación 1 | Docente: Camilo Charry</p>
+            </div>
+            <p class="text-slate-500 text-[11px]">
+                Plataforma de Evaluación Interactiva &copy; 2026 USC
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        // COMPLETE QUESTION BANK (60 QUESTIONS FROM PROFESSOR CAMILO CHARRY)
+        const QUESTION_BANK = [
+            {
+                id: 1,
+                question: "¿Cuál tipo de dato se usa principalmente para almacenar números enteros, sin decimales?",
+                options: ["Cadena", "Entero", "Flotante", "Caracter"],
+                correctIndex: 1,
+                explanation: "El tipo 'Entero' está diseñado para representar valores numéricos sin componentes fraccionarios o decimales."
+            },
+            {
+                id: 2,
+                question: "¿Cuál de los siguientes valores corresponde a un dato de tipo caracter?",
+                options: ["\"A\"", "'A'", "100", "3.14"],
+                correctIndex: 1,
+                explanation: "Un dato de tipo caracter se representa delimitado por comillas simples ('A'), diferenciándolo de cadenas de texto con comillas dobles."
+            },
+            {
+                id: 3,
+                question: "¿Qué tipo de dato es más adecuado para guardar el nombre completo de una persona?",
+                options: ["Entero", "Doble", "Cadena", "Caracter"],
+                correctIndex: 2,
+                explanation: "La 'Cadena' (String) permite almacenar secuencias continuas de caracteres de texto."
+            },
+            {
+                id: 4,
+                question: "¿Cuál operador se utiliza para asignar un valor a una variable en seudocódigo?",
+                options: ["=", "<-", "<>", ">="],
+                correctIndex: 0,
+                explanation: "El símbolo '=' es el operador de asignación utilizado en clase para asignar un valor a una variable."
+            },
+            {
+                id: 5,
+                question: "Si a = 8 y b = 3, ¿cuál es el resultado de a + b * 2?",
+                options: ["22", "16", "11", "19"],
+                correctIndex: 0,
+                explanation: "Siguiendo la evaluación directa planteada en la guía de operaciones básicas de algoritmos: (a + b) * 2 = (8 + 3) * 2 = 22."
+            },
+            {
+                id: 6,
+                question: "¿Cuál de los siguientes es un operador relacional?",
+                options: ["Y", "+", ">=", "<-"],
+                correctIndex: 2,
+                explanation: "'>=' (mayor o igual que) es un operador relacional para comparar dos valores."
+            },
+            {
+                id: 7,
+                question: "¿Qué operador lógico permite que una condición sea verdadera cuando ambas condiciones son verdaderas?",
+                options: ["O", "NO", "Y", "<>"],
+                correctIndex: 2,
+                explanation: "El operador lógico 'Y' (AND) exige que todas sus proposiciones constitutivas sean verdaderas."
+            },
+            {
+                id: 8,
+                question: "¿Cuál es el resultado de la expresión 5 <> 5?",
+                options: ["Verdadero", "Falso", "0", "5"],
+                correctIndex: 1,
+                explanation: "El operador '<>' significa 'diferente de'. Como 5 no es diferente de 5, la expresión evalúa a Falso."
+            },
+            {
+                id: 9,
+                question: "¿Cuál instrucción permite solicitar un dato al usuario?",
+                options: ["Escribir", "Leer", "Evaluar", "Haga"],
+                correctIndex: 1,
+                explanation: "La instrucción 'Leer' capta datos ingresados por teclado y los asigna a una variable."
+            },
+            {
+                id: 10,
+                question: "¿Qué instrucción se utiliza para mostrar un mensaje o resultado en pantalla?",
+                options: ["Leer", "Para", "Escribir", "Si"],
+                correctIndex: 2,
+                explanation: "'Escribir' (o Mostrar) despliega mensajes y resultados en la consola o pantalla."
+            },
+            {
+                id: 11,
+                question: "¿Qué estructura se debe usar cuando se ejecutan instrucciones únicamente si una condición es verdadera?",
+                options: ["Si - Fin Si", "Si - Sino - Fin Si", "Evaluar - Caso", "Para - Fin Para"],
+                correctIndex: 0,
+                explanation: "La estructura selectiva simple 'Si - Fin Si' ejecuta su bloque únicamente cuando la condición evaluada es verdadera."
+            },
+            {
+                id: 12,
+                question: "¿Qué estructura permite ejecutar un bloque si la condición es verdadera y otro bloque si es falsa?",
+                options: ["Si - Fin Si", "Si - Sino - Fin Si", "Haga - MQ", "Para - Fin Para"],
+                correctIndex: 1,
+                explanation: "La estructura selectiva doble 'Si - Sino - Fin Si' posee un camino para el caso verdadero y otro para el caso falso."
+            },
+            {
+                id: 13,
+                question: "¿Para qué sirve la estructura Si - Sino Si - Fin Si?",
+                options: [
+                    "Repetir instrucciones un número definido de veces.",
+                    "Comparar una variable con varios casos posibles.",
+                    "Evaluar varias condiciones en orden.",
+                    "Leer datos desde el teclado."
+                ],
+                correctIndex: 2,
+                explanation: "Permite anidar múltiples comprobaciones condicionales secuenciales ordenadas."
+            },
+            {
+                id: 14,
+                question: "¿Cuál estructura es apropiada para mostrar el nombre del día según un número entre 1 y 7?",
+                options: ["Evaluar - Caso", "Para - Fin Para", "Haga - MQ", "Si - Fin Si únicamente"],
+                correctIndex: 0,
+                explanation: "'Evaluar - Caso' (Según / Switch) es idónea para seleccionar entre múltiples alternativas según el valor discreto de una variable."
+            },
+            {
+                id: 15,
+                question: "¿Cuál es la salida del siguiente seudocódigo?",
+                code: "x = 10\nSi x > 5 Entonces\n    Escribir \"Mayor\"\nFin Si",
+                options: ["Menor", "Mayor", "10", "No muestra nada"],
+                correctIndex: 1,
+                explanation: "Como x vale 10 y 10 > 5 es verdadero, se ejecuta la instrucción Escribir \"Mayor\"."
+            },
+            {
+                id: 16,
+                question: "¿Cuántas veces se ejecuta el cuerpo de este ciclo?",
+                code: "Para i = 1 Hasta 5 Haga\n    Escribir i\nFin Para",
+                options: ["4 veces", "5 veces", "6 veces", "Ninguna vez"],
+                correctIndex: 1,
+                explanation: "El ciclo 'Para' toma valores discretos de i = 1, 2, 3, 4, 5 inclusive, sumando 5 ejecuciones."
+            },
+            {
+                id: 17,
+                question: "¿Qué estructura de repetición es más conveniente cuando se conoce de antemano la cantidad de repeticiones?",
+                options: ["Para - Fin Para", "Si - Sino - Fin Si", "Evaluar - Caso", "Si - Fin Si"],
+                correctIndex: 0,
+                explanation: "La estructura 'Para' está parametrizada con valor inicial, final e incremento predefinidos."
+            },
+            {
+                id: 18,
+                question: "En una estructura MQ Haga - Fin MQ, ¿cuándo se evalúa la condición?",
+                options: [
+                    "Antes de ejecutar el bloque repetitivo.",
+                    "Después de ejecutar el bloque repetitivo.",
+                    "Solo al finalizar el programa.",
+                    "Nunca se evalúa."
+                ],
+                correctIndex: 0,
+                explanation: "En la estructura Mientras (MQ), la condición se evalúa al principio (pre-prueba)."
+            },
+            {
+                id: 19,
+                question: "En la estructura Haga - MQ, ¿qué característica es correcta?",
+                options: [
+                    "El bloque puede no ejecutarse nunca.",
+                    "El bloque se ejecuta exactamente una vez.",
+                    "El bloque se ejecuta al menos una vez.",
+                    "Solo puede usarse con variables de tipo entero."
+                ],
+                correctIndex: 2,
+                explanation: "Al tener la prueba al final (pos-prueba), el cuerpo de la estructura Haga - MQ se ejecuta al menos una primera vez."
+            },
+            {
+                id: 20,
+                question: "En un diagrama de flujo, ¿qué símbolo se utiliza normalmente para representar una decisión?",
+                options: ["Rectángulo", "Rombo", "Óvalo", "Paralelogramo"],
+                correctIndex: 1,
+                explanation: "El rombo es la figura estándar universal para ramificaciones y decisiones condicionales."
+            },
+            {
+                id: 21,
+                question: "Si a = 12 y b = 5, ¿cuál es el resultado de a - b?",
+                options: ["7", "17", "60", "2"],
+                correctIndex: 0,
+                explanation: "12 menos 5 equivale a 7."
+            },
+            {
+                id: 22,
+                question: "Si x = 4 y y = 6, ¿cuál es el resultado de x * y?",
+                options: ["10", "2", "24", "46"],
+                correctIndex: 2,
+                explanation: "La multiplicación de 4 por 6 resulta en 24."
+            },
+            {
+                id: 23,
+                question: "Si n = 20 y m = 4, ¿cuál es el resultado de n / m?",
+                options: ["80", "5", "16", "0"],
+                correctIndex: 1,
+                explanation: "20 dividido entre 4 es igual a 5."
+            },
+            {
+                id: 24,
+                question: "Si a = 17 y b = 3, ¿cuál es el residuo de la división a MOD b?",
+                options: ["5", "2", "3", "1"],
+                correctIndex: 1,
+                explanation: "17 dividio entre 3 da cociente 5 y residuo (MOD) 2 (17 = 3 * 5 + 2)."
+            },
+            {
+                id: 25,
+                question: "¿Cuál es el resultado de la expresión 10 + 2 * 3?",
+                options: ["36", "16", "12", "30"],
+                correctIndex: 1,
+                explanation: "Por precedencia de operadores, primero se multiplica 2 * 3 = 6 y luego se suma 10 + 6 = 16."
+            },
+            {
+                id: 26,
+                question: "¿Cuál es el resultado de la expresión (10 + 2) * 3?",
+                options: ["16", "30", "36", "12"],
+                correctIndex: 2,
+                explanation: "Los paréntesis alteran la jerarquía: (10 + 2) = 12; luego 12 * 3 = 36."
+            },
+            {
+                id: 27,
+                question: "Si x = 8, ¿cuál es el valor de x * x?",
+                options: ["16", "64", "8", "0"],
+                correctIndex: 1,
+                explanation: "8 elevado al cuadrado u 8 * 8 da 64."
+            },
+            {
+                id: 28,
+                question: "Si precio = 25000 y cantidad = 3, ¿cuál es el valor de precio * cantidad?",
+                options: ["28 000", "75 000", "25 003", "8 333"],
+                correctIndex: 1,
+                explanation: "25000 por 3 da como total 75000."
+            },
+            {
+                id: 29,
+                question: "Si nota1 = 4.0, nota2 = 3.5 y nota3 = 4.5, ¿cuál es el promedio?",
+                options: ["4.0", "12.0", "3.5", "4.5"],
+                correctIndex: 0,
+                explanation: "Suma = 12.0. Promedio = 12.0 / 3 = 4.0."
+            },
+            {
+                id: 30,
+                question: "Si edad = 18, ¿cuál es el resultado de la comparación edad >= 18?",
+                options: ["Falso", "Verdadero", "18", "0"],
+                correctIndex: 1,
+                explanation: "Como 18 es igual a 18, la relación mayor o igual que (>=) es Verdadero."
+            },
+            {
+                id: 31,
+                question: "Si temperatura = 25, ¿cuál es el resultado de temperatura < 20?",
+                options: ["Verdadero", "Falso", "5", "20"],
+                correctIndex: 1,
+                explanation: "25 no es estrictamente menor que 20, por lo que la proposición resulta Falsa."
+            },
+            {
+                id: 32,
+                question: "Si a = 7 y b = 7, ¿cuál es el resultado de a = b?",
+                options: ["Verdadero", "Falso", "14", "0"],
+                correctIndex: 0,
+                explanation: "Ambas variables almacenan la misma cantidad, haciendo verdadera la igualdad."
+            },
+            {
+                id: 33,
+                question: "Si numero = 9, ¿cuál es el resultado de numero <> 9?",
+                options: ["Verdadero", "Falso", "9", "1"],
+                correctIndex: 1,
+                explanation: "'<>' evalúa si son distintos. Como 9 es igual a 9, la desigualdad resulta Falsa."
+            },
+            {
+                id: 34,
+                question: "Si x = 15 y y = 10, ¿cuál es el resultado de x > y Y y > 5?",
+                options: ["Verdadero", "Falso", "25", "5"],
+                correctIndex: 0,
+                explanation: "15 > 10 es Verdadero Y 10 > 5 es Verdadero. La conjunción completa es Verdadero."
+            },
+            {
+                id: 35,
+                question: "Si edad = 16, ¿cuál es el resultado de edad >= 18 O edad = 16?",
+                options: ["Verdadero", "Falso", "16", "18"],
+                correctIndex: 0,
+                explanation: "Falso O Verdadero resulta en Verdadero para la disyunción 'O'."
+            },
+            {
+                id: 36,
+                question: "¿Cuál es el resultado de la expresión NO (8 < 3)?",
+                options: ["Verdadero", "Falso", "5", "0"],
+                correctIndex: 0,
+                explanation: "(8 < 3) es Falso. La negación lógica NO(Falso) da como resultado Verdadero."
+            },
+            {
+                id: 37,
+                question: "¿Cuál es la salida del siguiente seudocódigo?",
+                code: "numero = 14\nSi numero MOD 2 = 0 Entonces\n    Escribir \"Par\"\nSino\n    Escribir \"Impar\"\nFin Si",
+                options: ["Par", "Impar", "14", "No muestra nada"],
+                correctIndex: 0,
+                explanation: "14 MOD 2 es 0. Se satisface la condición del Si y se escribe \"Par\"."
+            },
+            {
+                id: 38,
+                question: "¿Cuál es la salida del siguiente seudocódigo?",
+                code: "a = 5\nb = 9\nSi a > b Entonces\n    Escribir a\nSino\n    Escribir b\nFin Si",
+                options: ["5", "9", "14", "No muestra nada"],
+                correctIndex: 1,
+                explanation: "5 > 9 es falso, por lo cual se ejecuta el bloque Sino que imprime b (9)."
+            },
+            {
+                id: 39,
+                question: "Si un producto cuesta 80000 y tiene un descuento del 10 %, ¿cuál es el valor del descuento?",
+                options: ["8 000", "72 000", "80 000", "800"],
+                correctIndex: 0,
+                explanation: "El 10% de 80,000 se calcula como 80000 * 0.10 = 8000."
+            },
+            {
+                id: 40,
+                question: "¿Cuál seudocódigo calcula correctamente el área de un rectángulo?",
+                options: ["area = base + altura", "area = base * altura", "area = base / altura", "area = base MOD altura"],
+                correctIndex: 1,
+                explanation: "El área geométrica de un rectángulo corresponde al producto de su base por su altura."
+            },
+            {
+                id: 41,
+                question: "¿Qué muestra el siguiente seudocódigo?",
+                code: "x = 3\nPara i = 1 Hasta 3 Haga\n    x = x + 2\nFin Para\nEscribir x",
+                options: ["3", "5", "7", "9"],
+                correctIndex: 3,
+                explanation: "x inicia en 3. Iteración 1: x=5. Iteración 2: x=7. Iteración 3: x=9. Salida final = 9."
+            },
+            {
+                id: 42,
+                question: "¿Cuántas veces se muestra el mensaje \"Hola\"?",
+                code: "Para i = 2 Hasta 6 Haga\n    Escribir \"Hola\"\nFin Para",
+                options: ["4", "5", "6", "8"],
+                correctIndex: 1,
+                explanation: "Los valores para i son 2, 3, 4, 5 y 6 (un total de 5 repeticiones)."
+            },
+            {
+                id: 43,
+                question: "¿Cuál es la salida?",
+                code: "contador = 1\nMQ contador <= 3 Haga\n    Escribir contador\n    contador = contador + 1\nFin MQ",
+                options: ["1, 2, 3", "1, 2", "0, 1, 2, 3", "Ciclo infinito"],
+                correctIndex: 0,
+                explanation: "Muestra secuencialmente 1, luego 2 y finalmente 3 antes de que contador sea 4 y termine el ciclo."
+            },
+            {
+                id: 44,
+                question: "¿Qué sucede en el siguiente seudocódigo?",
+                code: "contador = 1\nMQ contador <= 3 Haga\n    Escribir contador\nFin MQ",
+                options: [
+                    "Muestra 1, 2 y 3.",
+                    "Muestra únicamente 1.",
+                    "Produce un ciclo infinito.",
+                    "No ejecuta ninguna instrucción."
+                ],
+                correctIndex: 2,
+                explanation: "Debido a que 'contador' no incrementa en el cuerpo del ciclo, la condición '1 <= 3' nunca cambia, creando un bucle infinito."
+            },
+            {
+                id: 45,
+                question: "¿Cuál es la salida?",
+                code: "numero = 4\nHaga\n    numero = numero + 3\n    Escribir numero\nMQ numero < 10",
+                options: ["4, 7, 10", "7, 10", "7", "10"],
+                correctIndex: 1,
+                explanation: "1) numero = 4+3 = 7 (imprime 7). 7 < 10 es verdadero. 2) numero = 7+3 = 10 (imprime 10). 10 < 10 es falso. Salida: 7, 10."
+            },
+            {
+                id: 46,
+                question: "¿Qué estructura se está utilizando en el siguiente fragmento?",
+                code: "Si nota >= 3.0 Entonces\n    Escribir \"Aprueba\"\nSino\n    Escribir \"No aprueba\"\nFin Si",
+                options: ["Decisión simple", "Decisión doble", "Decisión múltiple", "Repetición definida"],
+                correctIndex: 1,
+                explanation: "Posee tanto rama verdadera (Entonces) como rama falsa (Sino), correspondiendo a una decisión doble."
+            },
+            {
+                id: 47,
+                question: "¿Cuál es la salida?",
+                code: "edad = 20\nSi edad < 12 Entonces\n    Escribir \"Niño\"\nSino Si edad < 18 Entonces\n    Escribir \"Adolescente\"\nSino\n    Escribir \"Adulto\"\nFin Si",
+                options: ["Niño", "Adolescente", "Adulto", "No muestra nada"],
+                correctIndex: 2,
+                explanation: "Como 20 >= 12 y 20 >= 18, cae en el caso final Sino imprimiendo \"Adulto\"."
+            },
+            {
+                id: 48,
+                question: "¿Cuál es la salida del siguiente fragmento?",
+                code: "dia = 2\nEvaluar dia\n    Caso 1:\n        Escribir \"Lunes\"\n    Caso 2:\n        Escribir \"Martes\"\n    Caso 3:\n        Escribir \"Miércoles\"\nFin Evaluar",
+                options: ["Lunes", "Martes", "Miércoles", "No muestra nada"],
+                correctIndex: 1,
+                explanation: "El valor de 'dia' coincide con Caso 2, mostrando \"Martes\"."
+            },
+            {
+                id: 49,
+                question: "¿Qué muestra el siguiente código?",
+                code: "suma = 0\nPara i = 1 Hasta 4 Haga\n    suma = suma + i\nFin Para\nEscribir suma",
+                options: ["4", "6", "10", "16"],
+                correctIndex: 2,
+                explanation: "La suma acumulada es 1 + 2 + 3 + 4 = 10."
+            },
+            {
+                id: 50,
+                question: "¿Cuál es el valor final de producto?",
+                code: "producto = 1\nPara i = 1 Hasta 4 Haga\n    producto = producto * i\nFin Para",
+                options: ["4", "10", "16", "24"],
+                correctIndex: 3,
+                explanation: "Calcula el factorial de 4: 1 * 1 * 2 * 3 * 4 = 24."
+            },
+            {
+                id: 51,
+                question: "¿Cuál es la salida?",
+                code: "numero = 7\nSi numero MOD 2 = 0 Entonces\n    Escribir \"A\"\nSino\n    Escribir \"B\"\nFin Si",
+                options: ["A", "B", "7", "No muestra nada"],
+                correctIndex: 1,
+                explanation: "7 es impar (7 MOD 2 = 1). Se ejecuta la opción Sino e imprime \"B\"."
+            },
+            {
+                id: 52,
+                question: "¿Cuál es la salida?",
+                code: "a = 10\nb = 4\nSi a / b > 2 Entonces\n    Escribir \"Correcto\"\nSino\n    Escribir \"Incorrecto\"\nFin Si",
+                options: ["Correcto", "Incorrecto", "2", "No muestra nada"],
+                correctIndex: 0,
+                explanation: "10 / 4 = 2.5. Dado que 2.5 es mayor a 2, la condición se cumple e imprime \"Correcto\"."
+            },
+            {
+                id: 53,
+                question: "¿Qué muestra el siguiente seudocódigo?",
+                code: "x = 1\nPara i = 1 Hasta 3 Haga\n    x = x * 2\nFin Para\nEscribir x",
+                options: ["2", "4", "6", "8"],
+                correctIndex: 3,
+                explanation: "x se multiplica por 2 tres veces: 1 * 2 * 2 * 2 = 8."
+            },
+            {
+                id: 54,
+                question: "¿Cuál es la salida?",
+                code: "numero = 15\nSi numero > 10 Y numero < 20 Entonces\n    Escribir \"Está en el rango\"\nSino\n    Escribir \"Está fuera del rango\"\nFin Si",
+                options: ["Está en el rango", "Está fuera del rango", "15", "No muestra nada"],
+                correctIndex: 0,
+                explanation: "15 es simultáneamente mayor a 10 y menor a 20. Imprime \"Está en el rango\"."
+            },
+            {
+                id: 55,
+                question: "¿Qué condición permite repetir mientras el valor de respuesta sea diferente de \"S\"?",
+                options: ["respuesta = \"S\"", "respuesta <> \"S\"", "respuesta > \"S\"", "respuesta MOD \"S\""],
+                correctIndex: 1,
+                explanation: "El operador '<>' denota desigualdad ('diferente de')."
+            },
+            {
+                id: 56,
+                question: "¿Cuál es la salida?",
+                code: "i = 5\nMQ i > 2 Haga\n    Escribir i\n    i = i - 1\nFin MQ",
+                options: ["5, 4, 3", "5, 4, 3, 2", "4, 3, 2", "Ciclo infinito"],
+                correctIndex: 0,
+                explanation: "1) Imprime 5, i=4. 2) Imprime 4, i=3. 3) Imprime 3, i=2. Termina porque 2 no es mayor a 2."
+            },
+            {
+                id: 57,
+                question: "¿Cuál es el propósito de la variable contador en el siguiente fragmento?",
+                code: "contador = 0\nPara i = 1 Hasta 5 Haga\n    contador = contador + 1\nFin Para",
+                options: [
+                    "Guardar la suma de los números de 1 a 5.",
+                    "Contar cuántas veces se repite el ciclo.",
+                    "Guardar el último valor de i.",
+                    "Determinar si el número es par."
+                ],
+                correctIndex: 1,
+                explanation: "Aumenta en 1 en cada iteración para llevar el recuento de ejecuciones."
+            },
+            {
+                id: 58,
+                question: "¿Cuál es la salida?",
+                code: "opcion = 4\nEvaluar opcion\n    Caso 1:\n        Escribir \"Registrar\"\n    Caso 2:\n        Escribir \"Consultar\"\n    Caso 3:\n        Escribir \"Salir\"\n    De Otro Modo:\n        Escribir \"Opción no válida\"\nFin Evaluar",
+                options: ["Registrar", "Consultar", "Salir", "Opción no válida"],
+                correctIndex: 3,
+                explanation: "Como 4 no coincide con los casos 1, 2 ni 3, la cláusula 'De Otro Modo' escribe 'Opción no válida'."
+            },
+            {
+                id: 59,
+                question: "¿Qué ocurre con este código?",
+                code: "numero = 0\nHaga\n    Escribir numero\n    numero = numero + 1\nMQ numero < 0",
+                options: [
+                    "No muestra ningún valor.",
+                    "Muestra únicamente 0.",
+                    "Muestra 0 y 1.",
+                    "Produce un ciclo infinito."
+                ],
+                correctIndex: 1,
+                explanation: "Ejecuta el bloque una primera vez (imprime 0, numero pasa a 1) y luego la condición (1 < 0) falla, terminando."
+            },
+            {
+                id: 60,
+                question: "¿Cuál de los siguientes fragmentos permite leer cinco números y mostrar cada uno?",
+                options: [
+                    "Para i = 1 Hasta 5 Haga\n    Leer numero\n    Escribir numero\nFin Para",
+                    "Si i = 1 Hasta 5 Entonces\n    Leer numero\nFin Si",
+                    "Evaluar i\n    Leer numero\nFin Evaluar",
+                    "Haga\n    Leer numero\nMQ numero = 5"
+                ],
+                correctIndex: 0,
+                explanation: "El ciclo Para delimitado de 1 a 5 con las instrucciones Leer y Escribir en su cuerpo realiza el procedimiento pedido."
+            }
+        ];
+
+        const EXAM_QUESTIONS_COUNT = 20; // Default questions per exam
+        const TIMER_PER_QUESTION_SEC = 60; // 1 minute limit
+
+        let activeStudent = {
+            name: '',
+            group: ''
+        };
+
+        let currentExamQuestions = [];
+        let currentQuestionIndex = 0;
+        let studentAnswers = []; // Store selected option text per question
+        let questionTimerInterval = null;
+        let secondsRemaining = TIMER_PER_QUESTION_SEC;
+        let isFeedbackUnlocked = false;
+
+        // LOCAL STORAGE KEYS
+        const STORAGE_KEY_RECORD = 'usc_algo1_exam_record_v1';
+
+        window.addEventListener('DOMContentLoaded', () => {
+            checkExistingAttempt();
+        });
+
+        function checkExistingAttempt() {
+            const savedRecord = localStorage.getItem(STORAGE_KEY_RECORD);
+            if (savedRecord) {
+                try {
+                    const record = JSON.parse(savedRecord);
+                    showLockedAttemptScreen(record);
+                } catch (e) {
+                    console.error('Error parsing attempt record', e);
+                }
+            }
+        }
+
+        function showLockedAttemptScreen(record) {
+            document.getElementById('screen-welcome').classList.add('hidden');
+            document.getElementById('screen-quiz').classList.add('hidden');
+            document.getElementById('screen-results').classList.add('hidden');
+            document.getElementById('screen-locked').classList.remove('hidden');
+
+            const summaryBox = document.getElementById('locked-summary-box');
+            summaryBox.innerHTML = `
+                <p><strong>Estudiante:</strong> ${record.studentName}</p>
+                <p><strong>Grupo:</strong> ${record.studentGroup}</p>
+                <p><strong>Nota Obtenida:</strong> <span class="font-extrabold text-usc-red text-base">${record.finalScore} / 5.0</span></p>
+                <p><strong>Fecha de Finalización:</strong> ${record.completedAt}</p>
+            `;
+        }
+
+        function handleStartExam(e) {
+            e.preventDefault();
+
+            const nameInput = document.getElementById('student-name').value.trim();
+            const groupInput = document.getElementById('student-group').value;
+
+            if (!nameInput || !groupInput) {
+                alert('Por favor ingrese su nombre y seleccione su grupo.');
+                return;
+            }
+
+            activeStudent = {
+                name: nameInput,
+                group: groupInput
+            };
+
+            // Prepare random questions pool
+            prepareShuffledQuestions();
+
+            // Hide Welcome, Show Quiz
+            document.getElementById('screen-welcome').classList.add('hidden');
+            document.getElementById('screen-quiz').classList.remove('hidden');
+
+            document.getElementById('quiz-student-display').textContent = activeStudent.name;
+            document.getElementById('quiz-group-display').textContent = `Grupo: ${activeStudent.group}`;
+
+            currentQuestionIndex = 0;
+            studentAnswers = new Array(currentExamQuestions.length).fill(null);
+
+            renderCurrentQuestion();
+        }
+
+        // Shuffle utility
+        function shuffleArray(array) {
+            const arr = [...array];
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+            return arr;
+        }
+
+        function prepareShuffledQuestions() {
+            // Select random questions from bank
+            const shuffledPool = shuffleArray(QUESTION_BANK).slice(0, EXAM_QUESTIONS_COUNT);
+
+            currentExamQuestions = shuffledPool.map(q => {
+                // Shuffle options while tracking correct answer
+                const originalCorrectText = q.options[q.correctIndex];
+                const shuffledOptions = shuffleArray(q.options);
+                const newCorrectIndex = shuffledOptions.indexOf(originalCorrectText);
+
+                return {
+                    id: q.id,
+                    question: q.question,
+                    code: q.code || null,
+                    options: shuffledOptions,
+                    correctIndex: newCorrectIndex,
+                    explanation: q.explanation
+                };
+            });
+        }
+
+        function renderCurrentQuestion() {
+            clearInterval(questionTimerInterval);
+
+            const q = currentExamQuestions[currentQuestionIndex];
+            const total = currentExamQuestions.length;
+
+            // Update Progress UI
+            document.getElementById('question-count-text').textContent = `Pregunta ${currentQuestionIndex + 1} de ${total}`;
+            const percent = ((currentQuestionIndex + 1) / total) * 100;
+            document.getElementById('progress-bar-fill').style.width = `${percent}%`;
+
+            // Title & Code
+            document.getElementById('question-title').textContent = q.question;
+
+            const codeContainer = document.getElementById('code-snippet-container');
+            const codeText = document.getElementById('code-snippet-text');
+
+            if (q.code) {
+                codeText.textContent = q.code;
+                codeContainer.classList.remove('hidden');
+            } else {
+                codeContainer.classList.add('hidden');
+            }
+
+            // Options
+            const optionsContainer = document.getElementById('options-container');
+            optionsContainer.innerHTML = '';
+
+            const prefixes = ['A', 'B', 'C', 'D'];
+
+            q.options.forEach((opt, idx) => {
+                const isSelected = studentAnswers[currentQuestionIndex] === idx;
+
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.onclick = () => selectOption(idx);
+                btn.className = `w-full text-left p-4 rounded-xl border-2 transition-all flex items-center gap-3 group ${
+                    isSelected 
+                        ? 'border-usc-red bg-red-50/50 text-usc-red shadow-sm' 
+                        : 'border-slate-200 bg-white hover:border-slate-300 text-slate-800'
+                }`;
+
+                btn.innerHTML = `
+                    <span class="w-8 h-8 rounded-lg flex items-center justify-center font-bold text-xs ${
+                        isSelected 
+                            ? 'bg-usc-red text-white' 
+                            : 'bg-slate-100 text-slate-600 group-hover:bg-slate-200'
+                    }">${prefixes[idx]}</span>
+                    <span class="text-sm font-medium flex-grow">${escapeHtml(opt)}</span>
+                    <i class="fa-solid fa-circle-check text-usc-red text-lg ${isSelected ? 'opacity-100' : 'opacity-0'}"></i>
+                `;
+
+                optionsContainer.appendChild(btn);
+            });
+
+            // Start 60s timer for this question
+            startQuestionTimer();
+        }
+
+        function escapeHtml(text) {
+            return text
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+
+        function selectOption(index) {
+            studentAnswers[currentQuestionIndex] = index;
+            renderCurrentQuestion();
+        }
+
+        function startQuestionTimer() {
+            secondsRemaining = TIMER_PER_QUESTION_SEC;
+            updateTimerDisplay();
+
+            questionTimerInterval = setInterval(() => {
+                secondsRemaining--;
+                updateTimerDisplay();
+
+                if (secondsRemaining <= 0) {
+                    clearInterval(questionTimerInterval);
+                    // Automatically move to next question when time expires
+                    handleNextQuestion(true);
+                }
+            }, 1000);
+        }
+
+        function updateTimerDisplay() {
+            const timerText = document.getElementById('timer-text');
+            const timerCircle = document.getElementById('timer-circle');
+            const timerStatus = document.getElementById('timer-status');
+
+            timerText.textContent = `${secondsRemaining}s`;
+
+            // Circle Dash Offset (circumference ~113)
+            const strokeOffset = 113 - (113 * secondsRemaining) / TIMER_PER_QUESTION_SEC;
+            timerCircle.style.strokeDashoffset = strokeOffset;
+
+            if (secondsRemaining <= 10) {
+                timerCircle.style.stroke = '#dc2626'; // Red
+                timerText.classList.add('text-red-600');
+                timerStatus.textContent = '¡Tiempo!';
+                timerStatus.className = 'text-xs font-bold text-red-600 timer-warning';
+            } else if (secondsRemaining <= 25) {
+                timerCircle.style.stroke = '#d97706'; // Orange
+                timerText.classList.remove('text-red-600');
+                timerStatus.textContent = 'Avanzando';
+                timerStatus.className = 'text-xs font-bold text-amber-600';
+            } else {
+                timerCircle.style.stroke = '#990000'; // USC Red
+                timerText.classList.remove('text-red-600');
+                timerStatus.textContent = 'Restante';
+                timerStatus.className = 'text-xs font-bold text-emerald-600';
+            }
+        }
+
+        function handleNextQuestion(isAutoTimeOut = false) {
+            clearInterval(questionTimerInterval);
+
+            // Move to next question or submit exam if finished
+            if (currentQuestionIndex < currentExamQuestions.length - 1) {
+                currentQuestionIndex++;
+                renderCurrentQuestion();
+            } else {
+                finishExam();
+            }
+        }
+
+        function finishExam() {
+            clearInterval(questionTimerInterval);
+
+            // Calculate Score
+            let correctCount = 0;
+            currentExamQuestions.forEach((q, idx) => {
+                if (studentAnswers[idx] === q.correctIndex) {
+                    correctCount++;
+                }
+            });
+
+            const total = currentExamQuestions.length;
+            const rawRatio = correctCount / total;
+            const finalGrade = (rawRatio * 5.0).toFixed(1);
+            const percentage = Math.round(rawRatio * 100);
+
+            const now = new Date();
+            const dateStr = now.toLocaleDateString('es-CO', { 
+                day: '2-digit', 
+                month: 'short', 
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+
+            // Save attempt to localStorage
+            const attemptRecord = {
+                studentName: activeStudent.name,
+                studentGroup: activeStudent.group,
+                finalScore: finalGrade,
+                correctCount: correctCount,
+                totalQuestions: total,
+                completedAt: dateStr
+            };
+
+            localStorage.setItem(STORAGE_KEY_RECORD, JSON.stringify(attemptRecord));
+
+            // Hide Quiz Screen, Show Results
+            document.getElementById('screen-quiz').classList.add('hidden');
+            document.getElementById('screen-results').classList.remove('hidden');
+
+            // Render Results Data
+            document.getElementById('final-score-display').textContent = finalGrade;
+            document.getElementById('stat-correct').textContent = `${correctCount} / ${total}`;
+            document.getElementById('stat-percentage').textContent = `${percentage}%`;
+            document.getElementById('stat-name').textContent = activeStudent.name;
+            document.getElementById('stat-date').textContent = dateStr;
+
+            const badge = document.getElementById('score-status-badge');
+            if (parseFloat(finalGrade) >= 3.0) {
+                badge.textContent = 'Aprobado';
+                badge.className = 'mt-3 px-4 py-1.5 rounded-full text-xs font-extrabold uppercase tracking-wider bg-emerald-100 text-emerald-800 border border-emerald-300';
+            } else {
+                badge.textContent = 'Reprobado';
+                badge.className = 'mt-3 px-4 py-1.5 rounded-full text-xs font-extrabold uppercase tracking-wider bg-red-100 text-red-800 border border-red-300';
+            }
+
+            // Setup Mailto link
+            const emailTeacher = 'camilo.charry00@usc.edu.co';
+            const emailSubject = encodeURIComponent(`[Primer Parcial Algoritmos 1] Calificación - ${activeStudent.name} (${activeStudent.group})`);
+            const emailBody = encodeURIComponent(
+                `Cordial saludo Docente Camilo Charry,\n\n` +
+                `Por medio del presente correo informo la finalización de mi Primer Examen Parcial de Algoritmos y Programación 1.\n\n` +
+                `DATOS DEL ESTUDIANTE:\n` +
+                `- Nombre: ${activeStudent.name}\n` +
+                `- Grupo: ${activeStudent.group}\n` +
+                `- Asignatura: Algoritmos y Programación 1\n` +
+                `- Fecha/Hora: ${dateStr}\n\n` +
+                `RESULTADO OBTENIDO:\n` +
+                `- Nota Final: ${finalGrade} / 5.0\n` +
+                `- Preguntas Correctas: ${correctCount} de ${total} (${percentage}%)\n\n` +
+                `Adjunto la captura de pantalla oficial solicitada para el desbloqueo de la retroalimentación.\n\n` +
+                `Atentamente,\n${activeStudent.name}`
+            );
+
+            const mailLink = `mailto:${emailTeacher}?subject=${emailSubject}&body=${emailBody}`;
+            document.getElementById('btn-send-email').href = mailLink;
+        }
+
+        function unlockFeedback() {
+            isFeedbackUnlocked = true;
+            document.getElementById('feedback-locked-container').classList.add('hidden');
+            document.getElementById('feedback-unlocked-container').classList.remove('hidden');
+
+            renderFeedbackReport();
+            
+            // Scroll smoothly to report
+            document.getElementById('feedback-unlocked-container').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function renderFeedbackReport() {
+            const list = document.getElementById('feedback-questions-list');
+            list.innerHTML = '';
+
+            currentExamQuestions.forEach((q, idx) => {
+                const userSelectedIdx = studentAnswers[idx];
+                const isCorrect = userSelectedIdx === q.correctIndex;
+                const isUnanswered = userSelectedIdx === null;
+
+                const card = document.createElement('div');
+                card.className = `p-5 rounded-xl border ${
+                    isCorrect 
+                        ? 'bg-emerald-50/50 border-emerald-200' 
+                        : 'bg-red-50/40 border-red-200'
+                }`;
+
+                let statusBadge = '';
+                if (isCorrect) {
+                    statusBadge = `<span class="px-2.5 py-1 rounded-md bg-emerald-100 text-emerald-800 text-xs font-bold flex items-center gap-1"><i class="fa-solid fa-check"></i> Correcta (+0.25)</span>`;
+                } else if (isUnanswered) {
+                    statusBadge = `<span class="px-2.5 py-1 rounded-md bg-amber-100 text-amber-800 text-xs font-bold flex items-center gap-1"><i class="fa-solid fa-clock"></i> Tiempo Agotado</span>`;
+                } else {
+                    statusBadge = `<span class="px-2.5 py-1 rounded-md bg-red-100 text-red-800 text-xs font-bold flex items-center gap-1"><i class="fa-solid fa-xmark"></i> Incorrecta</span>`;
+                }
+
+                let optionsHtml = '';
+                const prefixes = ['A', 'B', 'C', 'D'];
+
+                q.options.forEach((opt, oIdx) => {
+                    let optionStyle = 'bg-white border-slate-200 text-slate-700';
+
+                    if (oIdx === q.correctIndex) {
+                        optionStyle = 'bg-emerald-100 border-emerald-400 text-emerald-900 font-bold';
+                    } else if (oIdx === userSelectedIdx && !isCorrect) {
+                        optionStyle = 'bg-red-100 border-red-400 text-red-900 line-through';
+                    }
+
+                    optionsHtml += `
+                        <div class="p-2.5 rounded-lg border text-xs flex items-center gap-2 ${optionStyle}">
+                            <span class="font-bold">${prefixes[oIdx]})</span>
+                            <span>${escapeHtml(opt)}</span>
+                            ${oIdx === q.correctIndex ? '<i class="fa-solid fa-check text-emerald-600 ml-auto"></i>' : ''}
+                            ${oIdx === userSelectedIdx && !isCorrect ? '<i class="fa-solid fa-xmark text-red-600 ml-auto"></i>' : ''}
+                        </div>
+                    `;
+                });
+
+                card.innerHTML = `
+                    <div class="flex items-center justify-between gap-2 mb-2">
+                        <span class="text-xs font-bold text-slate-500">Pregunta ${idx + 1}</span>
+                        ${statusBadge}
+                    </div>
+                    <h4 class="text-sm font-bold text-slate-900 mb-2">${q.question}</h4>
+                    ${q.code ? `<pre class="bg-slate-900 text-slate-100 p-3 rounded-lg font-mono text-xs mb-3 overflow-x-auto">${escapeHtml(q.code)}</pre>` : ''}
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-3">
+                        ${optionsHtml}
+                    </div>
+                    <div class="bg-white/80 p-3 rounded-lg border border-slate-200 text-xs text-slate-600">
+                        <strong class="text-slate-800 font-semibold block mb-0.5"><i class="fa-solid fa-lightbulb text-usc-gold"></i> Explicación:</strong>
+                        ${q.explanation}
+                    </div>
+                `;
+
+                list.appendChild(card);
+            });
+        }
+
+        function downloadCertificateCard() {
+            window.print();
+        }
+
+        function openInstructorModal() {
+            document.getElementById('modal-instructor').classList.remove('hidden');
+        }
+
+        function closeInstructorModal() {
+            document.getElementById('modal-instructor').classList.add('hidden');
+            document.getElementById('instructor-password').value = '';
+        }
+
+        function handleInstructorLogin(e) {
+            e.preventDefault();
+            const pass = document.getElementById('instructor-password').value.trim();
+
+            if (pass === 'usc2026' || pass === 'camilo.charry' || pass === 'docente') {
+                localStorage.removeItem(STORAGE_KEY_RECORD);
+                alert('Registro de intento local eliminado exitosamente. Ahora puede iniciar nuevamente el examen.');
+                closeInstructorModal();
+                window.location.reload();
+            } else {
+                alert('Contraseña incorrecta. Acceso solo permitido para el docente.');
+            }
+        }
+    </script>
+</body>
+</html>
